@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: backend
+    build: .
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - custom-network
+
+  storage:
+    container_name: storage
+    image: quay.io/minio/minio:RELEASE.2022-05-04T07-45-27Z
+    command: minio server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    hostname: minio1
+    volumes:
+      - data:/data
+    networks:
+      - custom-network
+
+volumes:
+  data:
+
+networks:
+  custom-network:
+    name: custom-network
+    driver: bridge
