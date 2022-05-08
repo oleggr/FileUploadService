@@ -9,8 +9,12 @@ File upload service
 
 You must have docker and docker-compose tools 
 installed to run the application. 
-Run command below:
+Run commands below:
 
 ```bash
+# to run setup
 make docker
+
+# to stop setup
+make down
 ```

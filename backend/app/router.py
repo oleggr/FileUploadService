@@ -9,7 +9,8 @@ from fastapi import APIRouter, status, UploadFile, Request, Form, File
 router = APIRouter()
 templates = Jinja2Templates(directory="static")
 client = Minio(
-    "storage:9000",
+    # "storage:9000",
+    "127.0.0.1:9000",
     access_key="minioadmin",
     secret_key="minioadmin",
     secure=False
