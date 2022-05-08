@@ -1,5 +1,7 @@
+import re
 from minio import Minio
 from fastapi import APIRouter, status, UploadFile
+from starlette.responses import JSONResponse
 
 
 router = APIRouter()
@@ -20,15 +22,30 @@ async def hello():
     return "Hello, world!"
 
 
-@router.post(
+@router.get(
     "/upload",
-    name='dev:test-basic-get',
+    name='upload_page',
     status_code=status.HTTP_200_OK
 )
-async def upload(file: UploadFile):
+async def main():
+    pass
+
+
+@router.post(
+    "/upload",
+    name='upload_file',
+    status_code=status.HTTP_200_OK
+)
+async def upload(file: UploadFile, request_id: str):
+    if re.match(".*exe", file.filename):
+        return JSONResponse(
+            'Wrong file format',
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
     client.put_object(
         bucket_name='test',
-        object_name=file.filename,
+        object_name=request_id + '_' + file.filename,
         data=file.file,
         length=-1,
         part_size=10485760,
