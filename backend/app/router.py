@@ -4,14 +4,16 @@ from starlette.responses import JSONResponse, FileResponse
 from starlette.templating import Jinja2Templates
 from fastapi import APIRouter, status, UploadFile, Form, File
 
+import config
+
 
 router = APIRouter()
 templates = Jinja2Templates(directory="static")
 client = Minio(
     "storage:9000",
     # "127.0.0.1:9000",
-    access_key="minioadmin",
-    secret_key="minioadmin",
+    access_key=config.access_key,
+    secret_key=config.secret_key,
     secure=False
 )
 
@@ -47,7 +49,7 @@ async def upload(file: UploadFile = File(...), request_id: str = Form(...)):
         )
 
     client.put_object(
-        bucket_name='new-test',
+        bucket_name='main',
         object_name=request_id + '_' + file.filename,
         data=file.file,
         length=-1,

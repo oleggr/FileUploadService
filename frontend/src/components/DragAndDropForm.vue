@@ -54,7 +54,7 @@ export default {
       let formData = new FormData();
       formData.append('request_id', this.request_id);
       for (let i=0; i < this.File.length; i++){
-        axios.post('http://127.0.0.1:8000/upload', 
+        axios.post('http://46.243.227.1/upload',
           {
             'request_id': this.request_id,
             'file': this.File[i]
