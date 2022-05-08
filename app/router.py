@@ -1,6 +1,6 @@
 import re
 from minio import Minio
-from fastapi import APIRouter, status, UploadFile, Request
+from fastapi import APIRouter, status, UploadFile, Request, Form, File
 from starlette.responses import JSONResponse
 from starlette.templating import Jinja2Templates
 
@@ -38,7 +38,7 @@ async def main(request: Request):
     name='upload_file',
     status_code=status.HTTP_200_OK
 )
-async def upload(file: UploadFile, request_id: str = 'tmp-prefix'):
+async def upload(file: UploadFile = File(...), request_id: str = Form(...)):
     if re.match(".*exe", file.filename):
         return JSONResponse(
             'Wrong file format',
