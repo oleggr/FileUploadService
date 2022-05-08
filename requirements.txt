@@ -7,3 +7,4 @@ sqlalchemy
 alembic~=1.5.7
 python-multipart
 minio
+jinja2
