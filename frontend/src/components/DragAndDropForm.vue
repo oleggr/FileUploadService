@@ -71,6 +71,9 @@ export default {
           console.log(response);
         });
       }
+
+      this.request_id = ""
+      this.File = []
     }
   }
 }
@@ -157,5 +160,14 @@ export default {
     width: 40vw;
     text-align: center;
     font-size: 16px;
+  }
+
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+   list-style-type: none;
+   text-align: center;
   }
 </style>
