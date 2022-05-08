@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Send log file</title>
+
+    <style>
+    .btn-group button {
+        background-color: #4CAF50; /* Green background */
+        border: 1px solid green; /* Green border */
+        color: white; /* White text */
+        padding: 10px 24px; /* Some padding */
+        cursor: pointer; /* Pointer/hand icon */
+        width: 50%; /* Set a width if needed */
+        display: block; /* Make the buttons appear below each other */
+        margin: auto;
+    }
+
+    .btn-group button:not(:last-child) {
+        border-bottom: none; /* Prevent double borders */
+    }
+
+    /* Add a background color on hover */
+    .btn-group button:hover {
+        background-color: #3e8e41;
+    }
+    </style>
+</head>
+
+<body>
+    <h1 align="center">Сделать заказ</h1>
+
+    <div align="center">
+    <form action="http://localhost:8000/upload" method="POST" enctype="multipart/form-data">
+
+        <table>
+
+            <tr>
+                <td>
+                <label for="request_id">Request ID: </label>
+                </td>
+                <td>
+                <input type="text" id="request_id" name="request_id" value=""><br>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                <label for="file">File: </label>
+                </td>
+                <td>
+                <input type="file" id="file" name="file"><br>
+                </td>
+            </tr>
+
+        </table>
+
+        <div class="btn-group">
+            <button type="submit" value="Submit">Send</button>
+        </div>
+    </form>
+    </div>
+
+</body>
+
+</html>
