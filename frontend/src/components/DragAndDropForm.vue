@@ -15,8 +15,8 @@
       Drag & drop to upload
       <div>or browse</div>
       <div v-if="File.length">
-        <ul v-for="file in File" :key="file">
-          <li>{{file.name}}</li>
+        <ul v-for="(file, index) in File" :key="file" :index="index">
+          <li>{{file.name}} <button v-on:click="()=>deleteHandler(index)">X</button></li>
         </ul>
       </div>
     </div>
@@ -50,10 +50,7 @@ export default {
     },
     clickHandler: function (e){
       console.log(e)
-      console.log(this)
-      console.log("-------")
-      console.log([...this.File])
-      
+
       let formData = new FormData();
       formData.append('request_id', this.request_id);
       for (let i=0; i < this.File.length; i++){
@@ -74,6 +71,9 @@ export default {
 
       this.request_id = ""
       this.File = []
+    },
+    deleteHandler: function (index){
+      this.File=[...this.File].filter((x,i)=>i!=index)
     }
   }
 }
