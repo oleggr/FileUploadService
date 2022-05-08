@@ -9,3 +9,4 @@ dev-docker-compose.yml
 deploy/.cache/
 dev-start.sh
 dev.txt
+**/node_modules

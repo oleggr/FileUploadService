@@ -1,9 +1,8 @@
 import re
-from typing import List
 from minio import Minio
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, FileResponse
 from starlette.templating import Jinja2Templates
-from fastapi import APIRouter, status, UploadFile, Request, Form, File
+from fastapi import APIRouter, status, UploadFile, Form, File
 
 
 router = APIRouter()
@@ -31,8 +30,8 @@ async def hello():
     name='upload_page',
     status_code=status.HTTP_200_OK
 )
-async def main(request: Request):
-    return templates.TemplateResponse("main.html", {"request": request})
+async def main():
+    return FileResponse('static/index.html')
 
 
 @router.post(
@@ -40,23 +39,19 @@ async def main(request: Request):
     name='upload_file',
     status_code=status.HTTP_200_OK
 )
-async def upload(files: List[UploadFile] = File(...), request_id: str = Form(...)):
-    uploaded = []
-
-    for file in files:
-        if re.match(".*exe", file.filename):
-            return JSONResponse(
-                'Wrong file format',
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
-        client.put_object(
-            bucket_name='test',
-            object_name=request_id + '_' + file.filename,
-            data=file.file,
-            length=-1,
-            part_size=10485760,
+async def upload(file: UploadFile = File(...), request_id: str = Form(...)):
+    if re.match(".*exe", file.filename):
+        return JSONResponse(
+            'Wrong file format',
+            status_code=status.HTTP_400_BAD_REQUEST,
         )
-        uploaded.append(file.filename)
 
-    return {"files": uploaded}
+    client.put_object(
+        bucket_name='new-test',
+        object_name=request_id + '_' + file.filename,
+        data=file.file,
+        length=-1,
+        part_size=10485760,
+    )
+
+    return {"file": file.filename}
