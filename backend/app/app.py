@@ -9,7 +9,7 @@ from app.router import router
 def get_application() -> FastAPI:
     application = FastAPI()
     application.include_router(router)
-    application.mount("/static", StaticFiles(directory="static"), name="static")
+    application.mount("/html", StaticFiles(directory="html"), name="html")
 
     application.add_middleware(
         CORSMiddleware,

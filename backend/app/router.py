@@ -31,7 +31,7 @@ async def hello():
     status_code=status.HTTP_200_OK
 )
 async def main():
-    return FileResponse('static/index.html')
+    return FileResponse('html/index.html')
 
 
 @router.post(
