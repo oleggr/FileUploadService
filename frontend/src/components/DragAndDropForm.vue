@@ -1,10 +1,9 @@
 <template> 
 
   <div id="drag-form" @dragover.prevent @drop.prevent>
-
-    <label for="request_id">Request ID: </label>
-    <input type="text" id="drag-form-request-id" v-model="request_id"/>
-   
+    <div class="request_input">  
+      <input class="request_input_field" type="text" id="drag-form-request-id" v-model="request_id" placeholder="Request ID"/>
+    </div>
 
     <input id="drag-form-input" style="display:none" type="file" multiple @change="uploadFile"/>
     <div
@@ -24,8 +23,6 @@
   </div>
 
   <button class="google-button" v-on:click="clickHandler">Send</button>
-  
-  <p>{{ request_id }}</p>
 
 </template>
 
@@ -95,7 +92,7 @@ export default {
     align-items: center;
     flex-direction: column;
     background-color: #fff;
-    border: 3px dashed palevioletred;
+    border: 3px dashed #25609c;
     border-radius: 10px;
     padding: 10px;
     width: 40vw;
@@ -103,11 +100,11 @@ export default {
   }
 
   #drag-field:hover {
-    border: 3px solid palevioletred;
+    border: 3px solid #25609c;
   }
 
   .drag-field-file-hover {
-    background-color: #000 !important;
+    background-color: #cfe6fc !important;
   }
 
   .google-button {
@@ -139,14 +136,26 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    background: #4285f4;
+    background: #25609c;
     border-radius: 4px;
     transform: scale(0);
     transition-property: transform,opacity;
   }
 
   .google-button:hover::before {
-    opacity: .06;
+    opacity: .1;
     transform: scale(2);
+  }
+
+  .request_input {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .request_input_field {
+    width: 40vw;
+    text-align: center;
+    font-size: 16px;
   }
 </style>
