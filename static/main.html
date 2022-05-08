@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Send log file</title>
+    <title>Upload logs</title>
 
     <style>
     .btn-group button {
@@ -26,7 +26,7 @@
 </head>
 
 <body>
-    <h1 align="center">Сделать заказ</h1>
+    <h1 align="center">Upload logs</h1>
 
     <div align="center">
     <form action="http://localhost:8000/upload" method="POST" enctype="multipart/form-data">
@@ -44,10 +44,10 @@
 
             <tr>
                 <td>
-                <label for="file">File: </label>
+                <label for="file">Files: </label>
                 </td>
                 <td>
-                <input type="file" id="file" name="file"><br>
+                <input type="file" id="file" name="files" multiple><br>
                 </td>
             </tr>
 
