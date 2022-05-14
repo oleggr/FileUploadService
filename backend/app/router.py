@@ -1,13 +1,11 @@
 import re
 from starlette.responses import JSONResponse, FileResponse
-from starlette.templating import Jinja2Templates
 from fastapi import APIRouter, status, UploadFile, File
 
 from app.storage import Storage
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="static")
 storage = Storage()
 
 
