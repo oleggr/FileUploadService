@@ -1,5 +1,5 @@
 {
-  "name": "file-upload-service",
+  "name": "upload-logs",
   "version": "0.1.0",
   "private": true,
   "scripts": {

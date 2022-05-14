@@ -5,8 +5,9 @@
       <input class="request_input_field" type="text" id="drag-form-request-id" v-model="request_id" placeholder="Request ID"/>
     </div>
 
-    <input id="drag-form-input" style="display:none" type="file" multiple @change="uploadFile"/>
+    <input id="drag-form-input" style="display:none" ref="file" type="file" multiple @change="uploadFile"/>
     <div
+    @click="$refs.file.click()"
     @drop="dragFile"
     @dragover.prevent="dragover"
     @dragleave.prevent="dragleave"
@@ -103,10 +104,11 @@ export default {
 
   #drag-field:hover {
     border: 3px solid #25609c;
+    background-color: #deefff !important;
   }
 
   .drag-field-file-hover {
-    background-color: #cfe6fc !important;
+    background-color: #deefff !important;
   }
 
   .google-button {
