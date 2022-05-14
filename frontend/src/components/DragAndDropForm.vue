@@ -33,7 +33,7 @@ export default {
   name: 'DragAndDropForm',
   data: () => ({
     File: [],
-    request_id: String()
+    request_id: (new URL(window.location.href)).searchParams.get("request_id")
   }),
   methods: {
     uploadFile(e) {
