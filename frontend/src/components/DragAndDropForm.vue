@@ -54,9 +54,8 @@ export default {
       let formData = new FormData();
       formData.append('request_id', this.request_id);
       for (let i=0; i < this.File.length; i++){
-        axios.post('http://46.243.227.1/upload',
+        axios.post('https://files.mobius-it.ru/upload?request_id=' + this.request_id,
           {
-            'request_id': this.request_id,
             'file': this.File[i]
           },
           {

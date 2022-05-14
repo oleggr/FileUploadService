@@ -3,7 +3,6 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
 from app.router import router
-# from app.database.db_handler import DBHandler
 
 
 def get_application() -> FastAPI:
@@ -18,8 +17,6 @@ def get_application() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    # DBHandler().create_tables()
 
     return application
 
