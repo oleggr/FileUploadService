@@ -17,7 +17,7 @@
       <div style="font-weight: bold;text-decoration: underline;">or browse</div>
       <div v-if="File.length">
         <ul v-for="(file, index) in File" :key="file" :index="index">
-          <li>{{file.name}} <button v-on:click="()=>deleteHandler(index)" class="google-button-cross">X</button></li>
+          <li>{{file.name}} <button v-on:click="deleteHandler($event, index)" class="google-button-cross">X</button></li>
         </ul>
       </div>
     </div>
@@ -100,7 +100,8 @@ export default {
         });
       }
     },
-    deleteHandler: function (index){
+    deleteHandler: function (e, index){
+      e.stopPropagation();
       this.File=[...this.File].filter((x,i) => i !== index)
     }
   }
