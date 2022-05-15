@@ -49,9 +49,7 @@ export default {
     dragleave(e){
       e.currentTarget.classList.remove("drag-field-file-hover")
     },
-    clickHandler: function (e){
-      console.log(e)
-
+    clickHandler: function (){
       let formData = new FormData();
       formData.append('request_id', this.request_id);
       for (let i=0; i < this.File.length; i++){
@@ -69,32 +67,41 @@ export default {
               this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
 
               if (this.bigger_20mb && (this.uploadPercentage % 10 === 0) && (this.uploadPercentage !== 100)) {
-                this.$toast.show("File " + (i + 1) + " delivering: " + this.uploadPercentage + "%",{
+                this.$toast.show("File " + this.File[i].name + (i + 1) + " delivering: " + this.uploadPercentage + "%",{
                   type: "info",
                   dismissible: true,
                   duration: 2000,
                 });
               }
-
-              if (this.uploadPercentage === 100) {
-                this.$toast.show("File " + (i + 1) + " delivered",{
-                  type: "success",
-                  dismissible: true,
-                  duration: 3000,
-                });
-              }
             }.bind(this)
           }
         ).then(response =>{
+          this.$toast.show("File " + this.File[i].name + (i + 1) + " delivered",{
+            type: "success",
+            dismissible: true,
+            duration: 3000,
+          });
+
+          if (i === this.File.length - 1) {
+            this.request_id = ""
+            this.File = []
+          }
+
           console.log(response);
+        })
+        .catch((error) => {
+          this.$toast.show("Delivering error: " + error.request.response,{
+            type: "error",
+            dismissible: true,
+            duration: 3000,
+          });
+
+          console.log(error);
         });
       }
-
-      this.request_id = ""
-      this.File = []
     },
     deleteHandler: function (index){
-      this.File=[...this.File].filter((x,i)=>i!=index)
+      this.File=[...this.File].filter((x,i) => i !== index)
     }
   }
 }
