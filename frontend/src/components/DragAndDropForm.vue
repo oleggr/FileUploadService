@@ -55,6 +55,8 @@ export default {
       let formData = new FormData();
       formData.append('request_id', this.request_id);
       for (let i=0; i < this.File.length; i++){
+        this.bigger_20mb = this.File[i].size > 20 * 1024 * 1024;
+
         axios.post('https://files.mobius-it.ru/upload?request_id=' + this.request_id,
           {
             'file': this.File[i]
@@ -62,7 +64,26 @@ export default {
           {
             headers: {
               'Content-Type': 'multipart/form-data'
-            }
+            },
+            onUploadProgress: function( progressEvent ) {
+              this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
+
+              if (this.bigger_20mb && (this.uploadPercentage % 10 === 0) && (this.uploadPercentage !== 100)) {
+                this.$toast.show("File " + (i + 1) + " delivering: " + this.uploadPercentage + "%",{
+                  type: "info",
+                  dismissible: true,
+                  duration: 2000,
+                });
+              }
+
+              if (this.uploadPercentage === 100) {
+                this.$toast.show("File " + (i + 1) + " delivered",{
+                  type: "success",
+                  dismissible: true,
+                  duration: 3000,
+                });
+              }
+            }.bind(this)
           }
         ).then(response =>{
           console.log(response);
