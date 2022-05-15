@@ -24,7 +24,7 @@ async def main():
     status_code=status.HTTP_200_OK
 )
 async def upload(request_id: str, file: UploadFile = File(...)):
-    if not request_id:
+    if not request_id or request_id == '' or request_id is None:
         return JSONResponse(
             'Empty request_id',
             status_code=status.HTTP_400_BAD_REQUEST,
