@@ -11,3 +11,4 @@ dev-start.sh
 dev.txt
 **/node_modules
 **/config.py
+**/logs

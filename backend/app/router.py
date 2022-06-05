@@ -17,6 +17,8 @@ storage = Storage()
     status_code=status.HTTP_200_OK
 )
 async def main(request: Request):
+    req = request.headers
+    print(req)
     client = request.client
     logger.info(f'Get request: client {client.host} on port {client.port}')
     return FileResponse('html/index.html')
