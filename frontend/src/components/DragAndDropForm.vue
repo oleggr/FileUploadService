@@ -76,24 +76,29 @@ export default {
             }.bind(this)
           }
         ).then(response =>{
-          this.$toast.show("File " + this.File[i].name + (i + 1) + " delivered",{
+          this.$toast.show("File " + this.File[i].name + (i + 1) + " uploaded.",{
             type: "success",
             dismissible: true,
-            duration: 3000,
+            duration: false,
           });
 
           if (i === this.File.length - 1) {
             this.request_id = ""
             this.File = []
+            this.$toast.show("All files uploaded. Close browser window.",{
+              type: "success",
+              dismissible: true,
+              duration: false,
+            });
           }
 
           console.log(response);
         })
         .catch((error) => {
-          this.$toast.show("Delivering error: " + error.request.response,{
+          this.$toast.show("Uploading error " + error.request.response,{
             type: "error",
             dismissible: true,
-            duration: 3000,
+            duration: false,
           });
 
           console.log(error);

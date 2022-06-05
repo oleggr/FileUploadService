@@ -1,0 +1,19 @@
+INFO | 05-06-2022 22:56:07 | File 4ba7d8d3c62e961494a50de2f61b2cc8.jpeg for request test_228 uploading started.
+INFO | 05-06-2022 22:57:36 | test 228
+INFO | 05-06-2022 22:57:47 | test 228
+INFO | 05-06-2022 22:59:10 | test 228
+INFO | 05-06-2022 22:59:49 | test 228
+INFO | 05-06-2022 23:01:26 | Get request: client 127.0.0.1 on port 62442
+INFO | 05-06-2022 23:05:51 | Get request: client 127.0.0.1 on port 63552
+INFO | 05-06-2022 23:06:11 | File 4ba7d8d3c62e961494a50de2f61b2cc8.jpeg for request og_test228 uploading started.
+INFO | 05-06-2022 23:08:18 | Get request: client 127.0.0.1 on port 64186
+INFO | 05-06-2022 23:08:30 | File calendar (1).png for request cheburkek_test uploading started.
+ALERT | 05-06-2022 23:08:30 | File calendar (1).png for request cheburkek_test uploading failed with error paket govna.
+INFO | 05-06-2022 23:08:30 | File hiva-sharifi-uYWU_y81yOk-unsplash.jpg for request cheburkek_test uploading started.
+ALERT | 05-06-2022 23:08:30 | File hiva-sharifi-uYWU_y81yOk-unsplash.jpg for request cheburkek_test uploading failed with error paket govna.
+INFO | 05-06-2022 23:15:04 | Get request: client 127.0.0.1 on port 49551
+INFO | 05-06-2022 23:15:21 | File "calendar (1).png" for request "test_request_228" uploading started: client 127.0.0.1 on port 49626
+INFO | 05-06-2022 23:15:21 | File "calendar (1).png" for request "test_request_228" uploading finished.
+INFO | 05-06-2022 23:15:21 | File "hiva-sharifi-uYWU_y81yOk-unsplash.jpg" for request "test_request_228" uploading started: client 127.0.0.1 on port 49627
+INFO | 05-06-2022 23:15:23 | File "hiva-sharifi-uYWU_y81yOk-unsplash.jpg" for request "test_request_228" uploading finished.
+INFO | 05-06-2022 20:29:26 | Get request: client 172.24.0.1 on port 56902

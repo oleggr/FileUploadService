@@ -2,6 +2,8 @@ import typing
 import boto3
 import config
 
+from app.logger import logger
+
 
 class Storage:
     bucket_name = 'logfiles'
@@ -15,9 +17,19 @@ class Storage:
             endpoint_url=config.endpoint,
         )
 
-    def put(self, request_id: str, filename: str, data: typing.IO):
-        self.s3.put_object(
-            Bucket=self.bucket_name,
-            Key=request_id + '/' + filename,
-            Body=data
-        )
+    def put(self, request_id: str, filename: str, data: typing.IO) -> bool:
+        try:
+            self.s3.put_object(
+                Bucket=self.bucket_name,
+                Key=request_id + '/' + filename,
+                Body=data
+            )
+            logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
+            return True
+        except Exception as e:
+            logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
+            return False
+
+    # def check_object_exist(self, filename: str) -> bool:
+    #     self.s3.head_object(filename)
+    #     return True
