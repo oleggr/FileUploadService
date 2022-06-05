@@ -11,16 +11,26 @@ router = APIRouter()
 storage = Storage()
 
 
+def get_real_ip(headers):
+    addr = ''
+
+    if 'x-real-ip' in headers:
+        addr = headers['x-real-ip']
+
+    if 'x-forwarded-for' in headers and not addr:
+        addr = headers['x-forwarded-for']
+
+    return addr
+
+
 @router.get(
     "/",
     name='home_page',
     status_code=status.HTTP_200_OK
 )
 async def main(request: Request):
-    req = request.headers
-    print(req)
-    client = request.client
-    logger.info(f'Get request: client {client.host} on port {client.port}')
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
     return FileResponse('html/index.html')
 
 
@@ -30,23 +40,23 @@ async def main(request: Request):
     status_code=status.HTTP_200_OK
 )
 async def upload(request: Request, request_id: str, file: UploadFile = File(...)):
-    client = request.client
+    addr = get_real_ip(request.headers)
 
     if not request_id or request_id == '' or request_id == "null":
-        logger.alert(f'Failed request - Empty request_id: client {client.host} on port {client.port}')
+        logger.alert(f'Failed request - Empty request_id: client {addr}')
         return JSONResponse(
             'Empty request_id',
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
     if re.match(".*exe", file.filename):
-        logger.alert(f'Failed request - Wrong file format: client {client.host} on port {client.port}')
+        logger.alert(f'Failed request - Wrong file format: client {addr}')
         return JSONResponse(
             'Wrong file format',
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    logger.info(f'File "{file.filename}" for request "{request_id}" uploading started: client {client.host} on port {client.port}')
+    logger.info(f'File "{file.filename}" for request "{request_id}" uploading started: client {addr}')
 
     storage.put(
         request_id=request_id,
