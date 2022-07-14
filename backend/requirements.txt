@@ -1,6 +1,6 @@
-fastapi~=0.75.0
-uvicorn~=0.17.6
-starlette~=0.17.1
+fastapi
+uvicorn~=0.18.2
+starlette~=0.20.4
 pytest~=7.1.0
 python-multipart
 boto3
