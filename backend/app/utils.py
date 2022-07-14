@@ -20,3 +20,6 @@ class DefaultConfig:
     access_key = "some_access_key"
     secret_key = "some_secret_key"
     endpoint = "http://some-url.ru"
+    LOGS_FOLDER = 'logs/'
+    MONITORING_BOT_TOKEN = "some_tg_token"
+    NOTIFICATION_CHAT_ID = 123456789

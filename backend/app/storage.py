@@ -3,6 +3,7 @@ import boto3
 
 from app.logger import logger
 from app.utils import ConfigLoader
+from app.notifications import notificator
 
 
 class Storage:
@@ -26,9 +27,11 @@ class Storage:
                 Body=data
             )
             logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
+            notificator.notify(f'File "{filename}" for request "{request_id}" uploading finished.')
             return True
         except Exception as e:
             logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
+            notificator.notify(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
             return False
 
     # def check_object_exist(self, filename: str) -> bool:
