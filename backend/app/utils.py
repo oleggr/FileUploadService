@@ -23,3 +23,7 @@ class DefaultConfig:
     LOGS_FOLDER = 'logs/'
     MONITORING_BOT_TOKEN = "some_tg_token"
     NOTIFICATION_CHAT_ID = 123456789
+    MAIL_PORT = 25
+    MAIL_SMTP_SERVER = "127.0.0.1"
+    MAIL_SENDER = ""
+    MAIL_RECEIVERS = [""]

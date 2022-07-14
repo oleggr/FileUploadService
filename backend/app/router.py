@@ -5,6 +5,7 @@ from fastapi import APIRouter, status, UploadFile, File, Request
 
 from app.storage import Storage
 from app.logger import logger
+from app.notifications import notificator
 
 
 router = APIRouter()
@@ -71,6 +72,16 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
         )
 
     return {"file": file.filename}
+
+
+@router.post(
+    "/finish_upload",
+    name='finish_file_upload_message',
+    status_code=status.HTTP_200_OK
+)
+async def finish_upload(request: Request, request_id: str):
+    request = await request.json()
+    notificator.send_email(request_id, request['files'])
 
 
 @router.get(

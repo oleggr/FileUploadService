@@ -3,7 +3,6 @@ import boto3
 
 from app.logger import logger
 from app.utils import ConfigLoader
-from app.notifications import notificator
 
 
 class Storage:
@@ -33,10 +32,8 @@ class Storage:
                 Body=data
             )
             logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
-            notificator.notify(f'File "{filename}" for request "{request_id}" uploading finished.')
         except Exception as e:
             logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
-            notificator.notify(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
             return False
 
         if self.check_object_exist(filename=full_file_name):
