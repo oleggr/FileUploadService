@@ -58,11 +58,17 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
 
     logger.info(f'File "{file.filename}" for request "{request_id}" uploading started: client {addr}')
 
-    storage.put(
+    upload_status = storage.put(
         request_id=request_id,
         filename=file.filename,
         data=file.file,
     )
+
+    if upload_status is False:
+        return JSONResponse(
+            'Upload failed',
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
     return {"file": file.filename}
 

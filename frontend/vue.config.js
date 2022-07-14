@@ -5,7 +5,7 @@ module.exports = defineConfig({
   assetsDir: process.env.NODE_ENVIRON === "prod"
     ? "../html"
     : "",
-  head: [
-    ['link', { rel: "icon", type: "image/png", href: "/public/favicon-32x32.png"}],
-  ],
+  // head: [
+  //   ['link', { rel: "icon", type: "image/png", href: "/public/favicon-32x32.png"}],
+  // ],
 })

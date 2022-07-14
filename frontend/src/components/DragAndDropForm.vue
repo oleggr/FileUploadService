@@ -85,7 +85,7 @@ export default {
           if (i === this.File.length - 1) {
             this.request_id = ""
             this.File = []
-            this.$toast.show("All files uploaded. Close browser window.",{
+            this.$toast.show("All files uploaded. You can close browser window now.",{
               type: "success",
               dismissible: true,
               duration: false,
