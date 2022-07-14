@@ -1,8 +1,8 @@
 import typing
 import boto3
-import config
 
 from app.logger import logger
+from app.utils import ConfigLoader
 
 
 class Storage:
@@ -10,6 +10,7 @@ class Storage:
 
     def __init__(self):
         session = boto3.session.Session()
+        config = ConfigLoader.get_config()
         self.s3 = session.client(
             service_name='s3',
             aws_access_key_id=config.access_key,
