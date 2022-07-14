@@ -9,7 +9,14 @@ class ConfigLoader:
     @staticmethod
     def get_config():
         try:
-            config = importlib.import_module(f'{ConfigLoader.config_name}')
+            config = importlib.import_module(ConfigLoader.config_name)
             return config
-        except ModuleNotFoundError as e:
-            logger.alert(f'Config not found, check that file backend/config.py exist')
+        except ModuleNotFoundError:
+            logger.alert(f'Config not found, check that file backend/config.py exist. Using default config.')
+            return DefaultConfig()
+
+
+class DefaultConfig:
+    access_key = "some_access_key"
+    secret_key = "some_secret_key"
+    endpoint = "http://some-url.ru"
