@@ -3,6 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+from app.logger import logger
 from app.utils import ConfigLoader
 
 
@@ -13,7 +14,10 @@ class notificator:
 
     @staticmethod
     def send_email(request_id: str, files: list):
-        MailNotificator().sendMessage(request_id, files)
+        try:
+            MailNotificator().sendMessage(request_id, files)
+        except Exception as e:
+            logger.alert(f'Failed send email for request {request_id}: {e}.')
 
 
 class TelegramNotificator:
