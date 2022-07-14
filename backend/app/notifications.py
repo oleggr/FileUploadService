@@ -13,9 +13,16 @@ class notificator:
         TelegramNotificator().sendMessage(message)
 
     @staticmethod
-    def send_email(request_id: str, files: list):
+    def send_success_email(request_id: str, files: list):
         try:
-            MailNotificator().sendMessage(request_id, files)
+            MailNotificator().successMessage(request_id, files)
+        except Exception as e:
+            logger.alert(f'Failed send email for request {request_id}: {e}.')
+
+    @staticmethod
+    def send_failed_email(request_id: str, error: str):
+        try:
+            MailNotificator().failedMessage(request_id, error)
         except Exception as e:
             logger.alert(f'Failed send email for request {request_id}: {e}.')
 
@@ -48,14 +55,24 @@ class MailNotificator:
     def __init__(self):
         self.config = ConfigLoader.get_config()
 
-    def sendMessage(self, request_id: str, files: list):
-        mail = MIMEMultipart()
-        mail['Subject'] = f"В заявку №{request_id} добавлены файлы"
-
+    def successMessage(self, request_id: str, files: list):
+        mail_subject = f"В заявку №{request_id} добавлены файлы"
         files_str = ''
         for file in files:
             files_str += file + "\n"
         mail_content = f"В заявку №{request_id} добавлены файлы:\n{files_str}"
+
+        self.sendMessage(mail_subject, mail_content)
+
+    def failedMessage(self, request_id: str, error: str):
+        mail_subject = f"Ошибка добавления файлов к заявке №{request_id}"
+        mail_content = f"Ошибка добавления файлов к заявке №{request_id}: {error}"
+
+        self.sendMessage(mail_subject, mail_content)
+
+    def sendMessage(self, mail_subject, mail_content):
+        mail = MIMEMultipart()
+        mail['Subject'] = mail_subject
         mail.attach(MIMEText(mail_content, 'plain'))
 
         with smtplib.SMTP(

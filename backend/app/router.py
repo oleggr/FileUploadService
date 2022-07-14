@@ -81,7 +81,7 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
 )
 async def finish_upload(request: Request, request_id: str):
     request = await request.json()
-    notificator.send_email(request_id, request['files'])
+    notificator.send_success_email(request_id, request['files'])
 
 
 @router.get(

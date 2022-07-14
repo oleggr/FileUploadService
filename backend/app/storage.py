@@ -1,9 +1,10 @@
-import typing
+import time
 import boto3
+import typing
 
 from app.logger import logger
 from app.utils import ConfigLoader
-
+from app.notifications import notificator
 
 class Storage:
     bucket_name = 'logfiles'
@@ -22,7 +23,7 @@ class Storage:
         full_file_name = request_id + '/' + filename
         file_exist = self.check_object_exist(filename=full_file_name)
         if file_exist:
-            filename = 'new_' + filename
+            filename = f'{int(time.time())}_' + filename
             full_file_name = request_id + '/' + filename
 
         try:
@@ -34,6 +35,7 @@ class Storage:
             logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
         except Exception as e:
             logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
+            notificator.send_failed_email(request_id, e)
             return False
 
         if self.check_object_exist(filename=full_file_name):
