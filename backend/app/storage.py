@@ -20,20 +20,33 @@ class Storage:
         )
 
     def put(self, request_id: str, filename: str, data: typing.IO) -> bool:
+        full_file_name = request_id + '/' + filename
+        file_exist = self.check_object_exist(filename=full_file_name)
+        if file_exist:
+            filename = 'new_' + filename
+            full_file_name = request_id + '/' + filename
+
         try:
             self.s3.put_object(
                 Bucket=self.bucket_name,
-                Key=request_id + '/' + filename,
+                Key=full_file_name,
                 Body=data
             )
             logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
             notificator.notify(f'File "{filename}" for request "{request_id}" uploading finished.')
-            return True
         except Exception as e:
             logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
             notificator.notify(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
             return False
 
-    # def check_object_exist(self, filename: str) -> bool:
-    #     self.s3.head_object(filename)
-    #     return True
+        if self.check_object_exist(filename=full_file_name):
+            return True
+        return False
+
+    def check_object_exist(self, filename) -> bool:
+        objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=filename)
+        if 'Contents' not in objs:
+            return False
+
+        objs = objs['Contents']
+        return len(objs) == 1 and objs[0]['Key'] == filename
