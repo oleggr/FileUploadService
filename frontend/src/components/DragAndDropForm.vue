@@ -2,7 +2,7 @@
 
   <div id="drag-form" @dragover.prevent @drop.prevent>
     <div class="request_input">  
-      <input class="request_input_field" type="text" id="drag-form-request-id" v-model="request_id" placeholder="Request ID"/>
+      <input class="request_input_field" type="text" id="drag-form-request-id" v-model="request_id" placeholder="Request ID" readonly/>
     </div>
 
     <input id="drag-form-input" style="display:none" ref="file" type="file" multiple @change="uploadFile"/>
@@ -148,10 +148,6 @@ export default {
 
   #drag-field:hover {
     border: 3px solid #25609c;
-    background-color: #deefff !important;
-  }
-
-  .drag-field-file-hover {
     background-color: #deefff !important;
   }
 
