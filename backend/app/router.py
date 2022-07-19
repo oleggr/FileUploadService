@@ -1,7 +1,8 @@
+import os
 import re
 
 from starlette.responses import JSONResponse, FileResponse
-from fastapi import APIRouter, status, UploadFile, File, Request
+from fastapi import APIRouter, status, UploadFile, File, Request, BackgroundTasks
 
 from app.logger import logger
 from app.storage import S3Storage
@@ -60,6 +61,39 @@ async def get_objects_in_request(request: Request):
     files = storage.get_objects_in_subfolder(params['request_id'])
 
     return files
+
+
+def clean_files_buffer(filename: str):
+    if not os.path.isfile(filename):
+        return
+    os.remove(filename)
+
+
+@router.get(
+    "/object/get",
+    name='requests',
+    status_code=status.HTTP_200_OK
+)
+async def download_object(request: Request, background_tasks: BackgroundTasks):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    request = await request.json()
+    params = request['Parameters']
+    local_filename = storage.get(params['request_id'], params['filename'])
+
+    if local_filename is not False:
+        background_tasks.add_task(clean_files_buffer, local_filename)
+        return FileResponse(
+            path=local_filename,
+            media_type='application/octet-stream',
+            filename=params['filename']
+        )
+
+    return JSONResponse(
+        'File was not downloaded',
+        status_code=status.HTTP_400_BAD_REQUEST,
+    )
 
 
 @router.get(
