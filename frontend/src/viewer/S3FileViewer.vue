@@ -2,7 +2,14 @@
 
   <div id="drag-form" @dragover.prevent @drop.prevent>
     <div class="request_input">  
-      <input class="request_input_field" type="text" id="drag-form-request-id" v-model="request_id" placeholder="Request ID" readonly/>
+      <input
+          class="request_input_field"
+          type="text"
+          id="drag-form-request-id"
+          v-model="request_id"
+          placeholder="Request ID"
+          v-on:keyup.enter="searchRequest"
+      />
     </div>
   </div>
 
@@ -40,6 +47,9 @@ export default {
         console.log(error);
       });
     },
+    searchRequest: function (){
+      window.location.href = 'http://127.0.0.1:8000/view?request_id=' + this.request_id;
+    }
   }
 }
 </script>
