@@ -3,13 +3,13 @@ import re
 from starlette.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, status, UploadFile, File, Request
 
-from app.storage import Storage
 from app.logger import logger
+from app.storage import S3Storage
 from app.notifications import notificator
 
 
 router = APIRouter()
-storage = Storage()
+storage = S3Storage()
 
 
 def get_real_ip(headers):
@@ -26,13 +26,54 @@ def get_real_ip(headers):
 
 @router.get(
     "/",
-    name='home_page',
+    name='upload_files_page',
     status_code=status.HTTP_200_OK
 )
-async def main(request: Request):
+async def get_upload_files_page(request: Request):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
     return FileResponse('html/index.html')
+
+
+@router.get(
+    "/view",
+    name='view_files_page',
+    status_code=status.HTTP_200_OK
+)
+async def get_view_files_page(request: Request):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+    return FileResponse('html/viewer.html')
+
+
+@router.get(
+    "/objects/list",
+    name='requests',
+    status_code=status.HTTP_200_OK
+)
+async def get_objects_in_request(request: Request):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    request = await request.json()
+    params = request['Parameters']
+    files = storage.get_objects_in_subfolder(params['request_id'])
+
+    return files
+
+
+@router.get(
+    "/search",
+    name='search',
+    status_code=status.HTTP_200_OK
+)
+async def search_files(request: Request):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    request = await request.json()
+    params = request['Parameters']
+    return []
 
 
 @router.post(

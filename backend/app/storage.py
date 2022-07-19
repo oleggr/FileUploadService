@@ -6,7 +6,8 @@ from app.logger import logger
 from app.utils import ConfigLoader
 from app.notifications import notificator
 
-class Storage:
+
+class S3Storage:
     bucket_name = 'logfiles'
 
     def __init__(self):
@@ -41,6 +42,20 @@ class Storage:
         if self.check_object_exist(filename=full_file_name):
             return True
         return False
+
+    def get_objects_in_subfolder(self, subfolder):
+        filenames = []
+
+        objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=subfolder)
+        if 'Contents' not in objs:
+            return False
+
+        objs = objs['Contents']
+        for obj in objs:
+            file = obj['Key']
+            filenames.append(file[file.find('/') + 1:])
+
+        return filenames
 
     def check_object_exist(self, filename) -> bool:
         objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=filename)
