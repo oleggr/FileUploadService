@@ -52,15 +52,11 @@ async def get_view_files_page(request: Request):
     name='requests',
     status_code=status.HTTP_200_OK
 )
-async def get_objects_in_request(request: Request):
+async def get_objects_in_request(request: Request, request_id: str):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
-    request = await request.json()
-    params = request['Parameters']
-    files = storage.get_objects_in_subfolder(params['request_id'])
-
-    return files
+    return storage.get_objects_in_subfolder(request_id)
 
 
 def clean_files_buffer(filename: str):
@@ -74,20 +70,18 @@ def clean_files_buffer(filename: str):
     name='requests',
     status_code=status.HTTP_200_OK
 )
-async def download_object(request: Request, background_tasks: BackgroundTasks):
+async def download_object(request: Request, request_id: str, filename: str, background_tasks: BackgroundTasks):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
-    request = await request.json()
-    params = request['Parameters']
-    local_filename = storage.get(params['request_id'], params['filename'])
+    local_filename = storage.get(request_id, filename)
 
     if local_filename is not False:
         background_tasks.add_task(clean_files_buffer, local_filename)
         return FileResponse(
             path=local_filename,
             media_type='application/octet-stream',
-            filename=params['filename']
+            filename=filename
         )
 
     return JSONResponse(
@@ -156,7 +150,7 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
 )
 async def finish_upload(request: Request, request_id: str):
     request = await request.json()
-    notificator.send_success_email(request_id, request['files'])
+    # notificator.send_success_email(request_id, request['files'])
 
 
 @router.get(

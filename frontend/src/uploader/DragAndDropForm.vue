@@ -55,7 +55,7 @@ export default {
       for (let i=0; i < this.File.length; i++){
         this.bigger_20mb = this.File[i].size > 20 * 1024 * 1024;
 
-        axios.post('https://files.mobius-it.ru/upload?request_id=' + this.request_id,
+        axios.post('http://127.0.0.1:8000/upload?request_id=' + this.request_id,
           {
             'file': this.File[i]
           },
@@ -76,7 +76,7 @@ export default {
             }.bind(this)
           }
         ).then(response =>{
-          this.$toast.show("File " + this.File[i].name + (i + 1) + " uploaded.",{
+          this.$toast.show("File №" + (i + 1) + " " + this.File[i].name + " uploaded.",{
             type: "success",
             dismissible: true,
             duration: false,
@@ -88,7 +88,7 @@ export default {
               uploaded_files.push(this.File[i].name)
             }
 
-            axios.post('https://files.mobius-it.ru/finish_upload?request_id=' + this.request_id,
+            axios.post('http://127.0.0.1:8000/finish_upload?request_id=' + this.request_id,
           {
               'files': uploaded_files
             })
