@@ -99,8 +99,8 @@ async def search_files(request: Request):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
-    request = await request.json()
-    params = request['Parameters']
+    # request = await request.json()
+    # params = request['Parameters']
     return []
 
 
