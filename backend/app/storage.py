@@ -64,7 +64,7 @@ class S3Storage:
         return local_filename
 
     def get_objects_in_subfolder(self, subfolder):
-        filenames = []
+        files = []
 
         objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=subfolder)
         if 'Contents' not in objs:
@@ -72,10 +72,13 @@ class S3Storage:
 
         objs = objs['Contents']
         for obj in objs:
-            file = obj['Key']
-            filenames.append(file[file.find('/') + 1:])
+            files.append({
+                'name': obj['Key'],
+                'size': str(round(obj['Size'] / 1048583.20763, 2)) + ' MB',
+                'created': obj['LastModified'].strftime('%H:%M:%S %d/%m/%Y'),
+            })
 
-        return filenames
+        return files
 
     def check_object_exist(self, filename) -> bool:
         objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=filename)

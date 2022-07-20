@@ -13,9 +13,23 @@
     </div>
   </div>
 
-  <li v-for="(item, index) in items" v-bind:key="index">
-    <a style="text-decoration:none" :href="`https://files.mobius-it.ru/object/get?request_id=${request_id}&filename=${item}`"> {{ item }} </a>
-  </li>
+  <table style="width:60%">
+    <tr>
+      <th v-on:click="sortByName">Filename</th>
+      <th style="width:25%" v-on:click="sortBySize">Size</th>
+      <th style="width:25%">Created at</th>
+<!--      <th style="width:25%" v-on:click="sortByDate">Created at</th>-->
+    </tr>
+
+    <tr v-for="(item, index) in items" v-bind:key="index">
+      <td>
+        <a style="text-decoration:none" :href="`https://files.mobius-it.ru/object/get?request_id=${request_id}&filename=${item.name}`"> {{ item.name }} </a>
+      </td>
+      <td class="td-center"> {{ item.size }} </td>
+      <td class="td-center"> {{ item.created }} </td>
+    </tr>
+  </table>
+
 </template>
 
 <script>
@@ -25,6 +39,9 @@ export default {
   data: () => ({
     request_id: (new URL(window.location.href)).searchParams.get("request_id"),
     items: [],
+    nameSortOrder: true,
+    sizeSortOrder: true,
+    dateSortOrder: true,
   }),
   mounted() {
       this.getFiles();
@@ -38,7 +55,7 @@ export default {
         console.log(response);
       })
       .catch((error) => {
-        this.$toast.show("Failed while trying to get files list: " + error.request.response,{
+        this.$toast.show("Failed while trying to get files list. " + error.request.response,{
           type: "error",
           dismissible: true,
           duration: false,
@@ -49,7 +66,46 @@ export default {
     },
     searchRequest: function (){
       window.location.href = 'https://files.mobius-it.ru/view?request_id=' + this.request_id;
-    }
+    },
+    sortByName: function (){
+      if (this.nameSortOrder) {
+        this.nameSortOrder = false;
+        this.items = this.items.slice().sort(function(a, b){
+          return (a.name > b.name) ? 1 : -1;
+        });
+      } else {
+        this.nameSortOrder = true;
+        this.items = this.items.slice().sort(function(a, b){
+          return (a.name < b.name) ? 1 : -1;
+        });
+      }
+    },
+    sortBySize: function (){
+      if (this.sizeSortOrder) {
+        this.sizeSortOrder = false;
+        this.items = this.items.slice().sort(function(a, b){
+          return (parseFloat(a.size) > parseFloat(b.size)) ? 1 : -1;
+        });
+      } else {
+        this.sizeSortOrder = true;
+        this.items = this.items.slice().sort(function(a, b){
+          return (parseFloat(a.size) < parseFloat(b.size)) ? 1 : -1;
+        });
+      }
+    },
+    // sortByDate: function (){
+    //   if (this.dateSortOrder) {
+    //     this.dateSortOrder = false;
+    //     this.items = this.items.slice().sort(function(a, b){
+    //       return (a.created > b.created) ? 1 : -1;
+    //     });
+    //   } else {
+    //     this.dateSortOrder = true;
+    //     this.items = this.items.slice().sort(function(a, b){
+    //       return (a.created < b.created) ? 1 : -1;
+    //     });
+    //   }
+    // },
   }
 }
 </script>
@@ -62,84 +118,13 @@ export default {
     border: 1px solid #000;
   }
 
-  .google-button {
-    align-items: center;
-    border: none;
-    display: inline-flex;
-    justify-content: center;
-    outline: none;
-    position: relative;
-    z-index: 0;
-    -webkit-font-smoothing: antialiased;
-    background: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 0 8px;
-    white-space: pre-wrap;
-    font-size : 20px; width: 5%;
+  td {
+    height: 40px;
+    font-size: 16px;
   }
 
-  .google-button::before {
-    content: '';
-    display: block;
-    opacity: 0;
-    position: absolute;
-    transition-duration: .15s;
-    transition-timing-function: cubic-bezier(0.4,0.0,0.2,1);
-    z-index: -1;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    background: #25609c;
-    border-radius: 4px;
-    transform: scale(0);
-    transition-property: transform,opacity;
-  }
-
-  .google-button:hover::before {
-    opacity: .1;
-    transform: scale(2);
-  }
-
-  .google-button-cross {
-    align-items: center;
-    border: none;
-    display: inline-flex;
-    justify-content: center;
-    outline: none;
-    position: relative;
-    z-index: 0;
-    -webkit-font-smoothing: antialiased;
-    background: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 0 8px;
-    white-space: pre-wrap;
-    font-size : 20px; width: 5%;
-  }
-
-  .google-button-cross::before {
-    content: '';
-    display: block;
-    opacity: 0;
-    position: absolute;
-    transition-duration: .15s;
-    transition-timing-function: cubic-bezier(0.4,0.0,0.2,1);
-    z-index: -1;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    background: #25609c;
-    border-radius: 4px;
-    transform: scale(0);
-    transition-property: transform,opacity;
-  }
-
-  .google-button-cross:hover::before {
-    opacity: .1;
-    transform: scale(1);
+  .td-center {
+    text-align: center;
   }
 
   .request_input {
