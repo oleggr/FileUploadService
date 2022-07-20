@@ -74,6 +74,7 @@ async def download_object(request: Request, request_id: str, filename: str, back
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
+    filename = filename.split('/')[1]
     local_filename = storage.get(request_id, filename)
 
     if local_filename is not False:
