@@ -1,3 +1,4 @@
+import os
 import time
 import boto3
 import typing
@@ -6,8 +7,10 @@ from app.logger import logger
 from app.utils import ConfigLoader
 from app.notifications import notificator
 
-class Storage:
+
+class S3Storage:
     bucket_name = 'logfiles'
+    buffer_folder = 'buffer'
 
     def __init__(self):
         session = boto3.session.Session()
@@ -41,6 +44,38 @@ class Storage:
         if self.check_object_exist(filename=full_file_name):
             return True
         return False
+
+    def get(self, request_id: str, filename: str):
+        if not os.path.isdir(self.buffer_folder):
+            os.mkdir(self.buffer_folder)
+
+        local_filename = self.buffer_folder + '/' + filename
+        s3_filename = request_id + '/' + filename
+        try:
+            self.s3.download_file(
+                self.bucket_name,
+                s3_filename,
+                local_filename,
+            )
+        except Exception as e:
+            logger.alert(f'File "{s3_filename}" for request downloading failed with error "{e}".')
+            return False
+
+        return local_filename
+
+    def get_objects_in_subfolder(self, subfolder):
+        filenames = []
+
+        objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=subfolder)
+        if 'Contents' not in objs:
+            return False
+
+        objs = objs['Contents']
+        for obj in objs:
+            file = obj['Key']
+            filenames.append(file[file.find('/') + 1:])
+
+        return filenames
 
     def check_object_exist(self, filename) -> bool:
         objs = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=filename)

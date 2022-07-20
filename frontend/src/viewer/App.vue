@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <h1 align="center">Upload logs</h1>
-    <DragAndDropForm/>
+    <h1 align="center">View files</h1>
+    <S3FileViewer/>
   </div>
 </template>
 
 <script>
-import DragAndDropForm from './components/DragAndDropForm.vue'
+import S3FileViewer from './S3FileViewer.vue'
 
 export default {
   name: 'App',
   components: {
-    DragAndDropForm
+    S3FileViewer
   }
 }
 </script>

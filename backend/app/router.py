@@ -1,15 +1,16 @@
+import os
 import re
 
 from starlette.responses import JSONResponse, FileResponse
-from fastapi import APIRouter, status, UploadFile, File, Request
+from fastapi import APIRouter, status, UploadFile, File, Request, BackgroundTasks
 
-from app.storage import Storage
 from app.logger import logger
+from app.storage import S3Storage
 from app.notifications import notificator
 
 
 router = APIRouter()
-storage = Storage()
+storage = S3Storage()
 
 
 def get_real_ip(headers):
@@ -26,13 +27,81 @@ def get_real_ip(headers):
 
 @router.get(
     "/",
-    name='home_page',
+    name='upload_files_page',
     status_code=status.HTTP_200_OK
 )
-async def main(request: Request):
+async def get_upload_files_page(request: Request):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
     return FileResponse('html/index.html')
+
+
+@router.get(
+    "/view",
+    name='view_files_page',
+    status_code=status.HTTP_200_OK
+)
+async def get_view_files_page(request: Request):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+    return FileResponse('html/viewer.html')
+
+
+@router.get(
+    "/object/list",
+    name='requests',
+    status_code=status.HTTP_200_OK
+)
+async def get_objects_in_request(request: Request, request_id: str):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    return storage.get_objects_in_subfolder(request_id)
+
+
+def clean_files_buffer(filename: str):
+    if not os.path.isfile(filename):
+        return
+    os.remove(filename)
+
+
+@router.get(
+    "/object/get",
+    name='requests',
+    status_code=status.HTTP_200_OK
+)
+async def download_object(request: Request, request_id: str, filename: str, background_tasks: BackgroundTasks):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    local_filename = storage.get(request_id, filename)
+
+    if local_filename is not False:
+        background_tasks.add_task(clean_files_buffer, local_filename)
+        return FileResponse(
+            path=local_filename,
+            media_type='application/octet-stream',
+            filename=filename
+        )
+
+    return JSONResponse(
+        'File was not downloaded',
+        status_code=status.HTTP_400_BAD_REQUEST,
+    )
+
+
+@router.get(
+    "/search",
+    name='search',
+    status_code=status.HTTP_200_OK
+)
+async def search_files(request: Request):
+    addr = get_real_ip(request.headers)
+    logger.info(f'Get request: client {addr}')
+
+    # request = await request.json()
+    # params = request['Parameters']
+    return []
 
 
 @router.post(

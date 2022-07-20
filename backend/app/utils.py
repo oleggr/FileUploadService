@@ -12,7 +12,7 @@ class ConfigLoader:
             config = importlib.import_module(ConfigLoader.config_name)
             return config
         except ModuleNotFoundError:
-            logger.alert(f'Config not found, check that file backend/config.py exist. Using default config.')
+            logger.alert('Config not found, check that file backend/config.py exist. Using default config.')
             return DefaultConfig()
 
 

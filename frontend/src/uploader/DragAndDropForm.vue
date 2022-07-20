@@ -76,7 +76,7 @@ export default {
             }.bind(this)
           }
         ).then(response =>{
-          this.$toast.show("File " + this.File[i].name + (i + 1) + " uploaded.",{
+          this.$toast.show("File №" + (i + 1) + " " + this.File[i].name + " uploaded.",{
             type: "success",
             dismissible: true,
             duration: false,
