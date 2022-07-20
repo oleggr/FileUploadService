@@ -14,7 +14,7 @@
   </div>
 
   <li v-for="(item, index) in items" v-bind:key="index">
-    <a style="text-decoration:none" :href="`http://127.0.0.1:8000/object/get?request_id=${request_id}&filename=${item}`"> {{ item }} </a>
+    <a style="text-decoration:none" :href="`https://files.mobius-it.ru/object/get?request_id=${request_id}&filename=${item}`"> {{ item }} </a>
   </li>
 </template>
 
@@ -32,7 +32,7 @@ export default {
   methods: {
     getFiles: function (){
       axios.get(
-          'http://127.0.0.1:8000/objects/list?request_id=' + this.request_id,
+          'https://files.mobius-it.ru/object/list?request_id=' + this.request_id,
       ).then(response =>{
         this.items = response.data;
         console.log(response);
@@ -48,7 +48,7 @@ export default {
       });
     },
     searchRequest: function (){
-      window.location.href = 'http://127.0.0.1:8000/view?request_id=' + this.request_id;
+      window.location.href = 'https://files.mobius-it.ru/view?request_id=' + this.request_id;
     }
   }
 }

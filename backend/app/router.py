@@ -48,7 +48,7 @@ async def get_view_files_page(request: Request):
 
 
 @router.get(
-    "/objects/list",
+    "/object/list",
     name='requests',
     status_code=status.HTTP_200_OK
 )
