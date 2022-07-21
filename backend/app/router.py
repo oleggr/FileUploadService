@@ -74,8 +74,8 @@ async def download_object(request: Request, request_id: str, filename: str, back
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
+    local_filename = storage.get(filename)
     filename = filename.split('/')[1]
-    local_filename = storage.get(request_id, filename)
 
     if local_filename is not False:
         background_tasks.add_task(clean_files_buffer, local_filename)
@@ -120,7 +120,9 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    if re.match(".*exe", file.filename):
+    # Todo: fix regexp, remove "or"
+    if re.match(".*exe", file.filename) or \
+            re.match(".*php", file.filename):
         logger.alert(f'Failed request - Wrong file format: client {addr}')
         return JSONResponse(
             'Wrong file format',
