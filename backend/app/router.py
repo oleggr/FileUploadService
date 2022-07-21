@@ -74,8 +74,8 @@ async def download_object(request: Request, request_id: str, filename: str, back
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
-    local_filename = storage.get(filename)
-    filename = filename.split('/')[1]
+    local_filename = storage.get_file_by_name(filename)
+    filename = filename.replace('/', '_')
 
     if local_filename is not False:
         background_tasks.add_task(clean_files_buffer, local_filename)

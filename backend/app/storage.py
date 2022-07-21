@@ -63,6 +63,23 @@ class S3Storage:
 
         return local_filename
 
+    def get_file_by_name(self, filename, ts: str = None):
+        if not os.path.isdir(self.buffer_folder):
+            os.mkdir(self.buffer_folder)
+
+        local_filename = self.buffer_folder + '/' + filename.split('/')[1]
+        try:
+            self.s3.download_file(
+                self.bucket_name,
+                filename,
+                local_filename,
+            )
+        except Exception as e:
+            logger.alert(f'File "{filename}" for request downloading failed with error "{e}".')
+            return False
+
+        return local_filename
+
     def get_objects_in_subfolder(self, subfolder):
         files = []
 
