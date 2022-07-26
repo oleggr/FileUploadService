@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "NODE_ENVIRON=dev vue-cli-service serve --port 3000",
     "build": "NODE_ENVIRON=prod vue-cli-service build",
+    "win-dev": "set NODE_ENVIRON=dev && vue-cli-service serve --port 3000",
+    "win-build": "set NODE_ENVIRON=prod && vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
