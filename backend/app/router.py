@@ -70,7 +70,7 @@ def clean_files_buffer(filename: str):
     name='requests',
     status_code=status.HTTP_200_OK
 )
-async def download_object(request: Request, request_id: str, filename: str, background_tasks: BackgroundTasks):
+async def download_object(request: Request, filename: str, background_tasks: BackgroundTasks):
     addr = get_real_ip(request.headers)
     logger.info(f'Get request: client {addr}')
 
@@ -121,8 +121,7 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
         )
 
     # Todo: fix regexp, remove "or"
-    if re.match(".*exe", file.filename) or \
-            re.match(".*php", file.filename):
+    if re.match(".*(exe|php)$", file.filename):
         logger.alert(f'Failed request - Wrong file format: client {addr}')
         return JSONResponse(
             'Wrong file format',
