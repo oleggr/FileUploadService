@@ -15,8 +15,8 @@
 
   <table style="width:60%">
     <tr>
-      <th v-on:click="sortByName">Filename</th>
-      <th style="width:25%" v-on:click="sortBySize">Size</th>
+      <th style="cursor: pointer" v-on:click="sortByName">Filename</th>
+      <th style="width:25%;cursor: pointer;" v-on:click="sortBySize">Size</th>
       <th style="width:25%">Created at</th>
 <!--      <th style="width:25%" v-on:click="sortByDate">Created at</th>-->
     </tr>
@@ -106,6 +106,13 @@ export default {
     //     });
     //   }
     // },
+    startDownloading: function (filename){
+      this.$toast.show(`Download of ${filename} started`,{
+        type: "success",
+        dismissible: true,
+        duration: 4000,
+      });
+    },
   }
 }
 </script>
