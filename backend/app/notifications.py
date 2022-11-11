@@ -56,11 +56,11 @@ class MailNotificator:
         self.config = ConfigLoader.get_config()
 
     def successMessage(self, request_id: str, files: list):
-        mail_subject = f"В заявку №{request_id} добавлены файлы"
+        mail_subject = f"В заявку [TicketID: {request_id}] добавлены  файлы"
         files_str = ''
         for file in files:
             files_str += file + "\n"
-        mail_content = f"В заявку №{request_id} добавлены файлы:\n{files_str}"
+        mail_content = f"В заявку [TicketID: {request_id}] добавлены файлы:\n{files_str}"
 
         self.sendMessage(mail_subject, mail_content)
 
