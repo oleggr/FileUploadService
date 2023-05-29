@@ -23,7 +23,7 @@
 
     <tr v-for="(item, index) in items" v-bind:key="index">
       <td>
-        <a style="text-decoration:none" :href="`https://files.mobius-it.ru/object/get?filename=${item.name}`"> {{ item.name }} </a>
+        <a style="text-decoration:none" :href="`https://files.mobius-it.ru/object/get?filename=${encodeURIComponent(item.name)}`"> {{ item.name }} </a>
       </td>
       <td class="td-center"> {{ item.size }} </td>
       <td class="td-center"> {{ item.created }} </td>
