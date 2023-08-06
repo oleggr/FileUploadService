@@ -16,15 +16,19 @@ class notificator:
     def send_success_email(request_id: str, files: list):
         try:
             MailNotificator().successMessage(request_id, files)
+            return True
         except Exception as e:
             logger.alert(f'Failed send email for request {request_id}: {e}.')
+            return False
 
     @staticmethod
     def send_failed_email(request_id: str, error: str):
         try:
             MailNotificator().failedMessage(request_id, error)
+            return True
         except Exception as e:
             logger.alert(f'Failed send email for request {request_id}: {e}.')
+            return False
 
 
 class TelegramNotificator:
