@@ -6,7 +6,9 @@ from email.mime.multipart import MIMEMultipart
 from app.logger import logger
 from app.utils import ConfigLoader
 
+
 EMAIL_SEND_MAX_RETRIES = 10
+
 
 class notificator:
     @staticmethod
