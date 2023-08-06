@@ -27,3 +27,7 @@ class DefaultConfig:
     MAIL_SMTP_SERVER = "127.0.0.1"
     MAIL_SENDER = ""
     MAIL_RECEIVERS = [""]
+
+    redis_host = 'redis'
+    redis_port = 6379
+    redis_password = 'password123'
