@@ -38,7 +38,7 @@ class S3Storage:
             logger.info(f'File "{filename}" for request "{request_id}" uploading finished.')
         except Exception as e:
             logger.alert(f'File "{filename}" for request "{request_id}" uploading failed with error "{e}".')
-            notificator.send_failed_email(request_id, e)
+            notificator.send_failed_email(request_id, str(e))
             return False
 
         if self.check_object_exist(filename=full_file_name):
