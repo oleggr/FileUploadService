@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from app.logger import logger
 from app.utils import ConfigLoader
 
+EMAIL_SEND_MAX_RETRIES = 10
 
 class notificator:
     @staticmethod
@@ -14,21 +15,31 @@ class notificator:
 
     @staticmethod
     def send_success_email(request_id: str, files: list):
-        try:
-            MailNotificator().successMessage(request_id, files)
-            return True
-        except Exception as e:
-            logger.alert(f'Failed send email for request {request_id}: {e}.')
-            return False
+        email_send_retries = 1
+
+        while email_send_retries <= EMAIL_SEND_MAX_RETRIES:
+            try:
+                MailNotificator().successMessage(request_id, files)
+                return
+            except Exception as e:
+                logger.alert(f'Failed send success email for request {request_id}: {e}.')
+                email_send_retries += 1
+
+        logger.alert(f'Retries exceeded for sending success email for request {request_id}')
 
     @staticmethod
     def send_failed_email(request_id: str, error: str):
-        try:
-            MailNotificator().failedMessage(request_id, error)
-            return True
-        except Exception as e:
-            logger.alert(f'Failed send email for request {request_id}: {e}.')
-            return False
+        email_send_retries = 1
+
+        while email_send_retries <= EMAIL_SEND_MAX_RETRIES:
+            try:
+                MailNotificator().failedMessage(request_id, error)
+                return
+            except Exception as e:
+                logger.alert(f'Failed send fail email for request {request_id}: {e}.')
+                email_send_retries += 1
+
+        logger.alert(f'Retries exceeded for sending failed email for request {request_id}')
 
 
 class TelegramNotificator:

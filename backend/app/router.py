@@ -152,15 +152,7 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
 )
 async def finish_upload(request: Request, request_id: str):
     request = await request.json()
-    email_sent_retries = 1
-
-    while email_sent_retries <= 10:
-        sent_successfully = notificator.send_success_email(request_id, request['files'])
-        if not sent_successfully:
-            logger.alert(f'Email sending failed for request {request_id}: retry №{email_sent_retries}')
-            email_sent_retries += 1
-            continue
-        break
+    notificator.send_success_email(request_id, request['files'])
 
 
 @router.get(
