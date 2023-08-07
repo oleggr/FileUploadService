@@ -5,11 +5,9 @@ from app.logger import logger
 from app.utils import ConfigLoader
 
 
-DEFAULT_EXPIRE_TIME = 3600  # in seconds (1 hour)
-
-
 class RedisCache:
     master: Redis
+    DEFAULT_EXPIRE_TIME = 3600  # in seconds (1 hour)
 
     def __init__(self):
         config = ConfigLoader.get_config()
@@ -28,9 +26,11 @@ class RedisCache:
 
         files.append(filename)
 
+        # self.master.ttl()
+
         try:
             logger.info(f'Set "{filename}" to Redis for request "{request_id}".')
-            self.master.set(request_id, pickle.dumps(files), ex=DEFAULT_EXPIRE_TIME)
+            self.master.set(request_id, pickle.dumps(files), ex=self.DEFAULT_EXPIRE_TIME)
         except Exception as e:
             logger.alert(f'Error while setting "{filename}" to Redis for request "{request_id}": {e}')
 
@@ -52,3 +52,16 @@ class RedisCache:
             self.master.delete(request_id)
         except Exception as e:
             logger.alert(f'Error while deleting record from Redis for request "{request_id}": {e}')
+
+    def get_all_keys(self):
+        keys_data = {}
+
+        try:
+            logger.info(f'Get all keys from Redis".')
+            keys = self.master.keys('*')
+            for key in keys:
+                keys_data[key] = self.master.ttl(key)
+        except Exception as e:
+            logger.alert(f'Error while getting all files from Redis: {e}')
+
+        return keys_data
