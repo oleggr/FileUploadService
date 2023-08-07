@@ -8,7 +8,23 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/logs:/app/logs
+    depends_on:
+      - redis
     restart: always
+    networks:
+      - custom-network
+
+  redis:
+    image: 'bitnami/redis:latest'
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      - REDIS_PASSWORD=password123
     networks:
       - custom-network
 

@@ -1,0 +1,1 @@
+*/5 * * * * /app/bin/python /app/files_cron_notification_handler.py >> /app/logs/cron.log 2>&1

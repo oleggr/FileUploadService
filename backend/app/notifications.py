@@ -22,12 +22,13 @@ class notificator:
         while email_send_retries <= EMAIL_SEND_MAX_RETRIES:
             try:
                 MailNotificator().successMessage(request_id, files)
-                return
+                return True
             except Exception as e:
                 logger.alert(f'Failed send success email for request {request_id}: {e}.')
                 email_send_retries += 1
 
         logger.alert(f'Retries exceeded for sending success email for request {request_id}')
+        return False
 
     @staticmethod
     def send_failed_email(request_id: str, error: str):
@@ -36,12 +37,13 @@ class notificator:
         while email_send_retries <= EMAIL_SEND_MAX_RETRIES:
             try:
                 MailNotificator().failedMessage(request_id, error)
-                return
+                return True
             except Exception as e:
                 logger.alert(f'Failed send fail email for request {request_id}: {e}.')
                 email_send_retries += 1
 
         logger.alert(f'Retries exceeded for sending failed email for request {request_id}')
+        return False
 
 
 class TelegramNotificator:

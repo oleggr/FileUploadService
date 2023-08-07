@@ -5,12 +5,14 @@ from starlette.responses import JSONResponse, FileResponse
 from fastapi import APIRouter, status, UploadFile, File, Request, BackgroundTasks
 
 from app.logger import logger
+from app.cache import RedisCache
 from app.storage import S3Storage
 from app.notifications import notificator
 
 
 router = APIRouter()
 storage = S3Storage()
+cache = RedisCache()
 
 
 def get_real_ip(headers):
@@ -91,20 +93,6 @@ async def download_object(request: Request, filename: str, background_tasks: Bac
     )
 
 
-@router.get(
-    "/search",
-    name='search',
-    status_code=status.HTTP_200_OK
-)
-async def search_files(request: Request):
-    addr = get_real_ip(request.headers)
-    logger.info(f'Get request: client {addr}')
-
-    # request = await request.json()
-    # params = request['Parameters']
-    return []
-
-
 @router.post(
     "/upload",
     name='upload_file',
@@ -120,7 +108,6 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    # Todo: fix regexp, remove "or"
     if re.match(".*(exe|php)$", file.filename):
         logger.alert(f'Failed request - Wrong file format: client {addr}')
         return JSONResponse(
@@ -152,7 +139,9 @@ async def upload(request: Request, request_id: str, file: UploadFile = File(...)
 )
 async def finish_upload(request: Request, request_id: str):
     request = await request.json()
-    notificator.send_success_email(request_id, request['files'])
+    sent_successfully = notificator.send_success_email(request_id, request['files'])
+    if sent_successfully:
+        cache.drop(request_id)
 
 
 @router.get(
